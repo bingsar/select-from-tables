@@ -84,3 +84,10 @@ function deleteTask($userId, $id) {
     $stmt = $pdo->prepare($deleteTask);
     $stmt->execute(["user_id" => $userId, "id" => $id]);
 }
+
+function updateTask ($is_done, $user_id, $task_id) {
+    global $pdo;
+    $setTaskValue = 'UPDATE task SET is_done= :is_done WHERE user_id= :user_id AND id= :task_id LIMIT 1';
+    $stmt = $pdo->prepare($setTaskValue);
+    $stmt->execute(["is_done" => $is_done, "user_id" => $user_id, "task_id" => $task_id]);
+}

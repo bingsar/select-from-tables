@@ -88,39 +88,28 @@ if (isset($_POST['id']))  {
                         <td><?php echo $table['id']?></td>
                         <td><?php echo $table['description']?></td>
                         <td><?php echo $table['date_added']?></td>
-                        <td><?php print_r($_POST); if ($_POST['x'] == 0 || $table['id'] == 0) {
+                        <td><?php if ($_POST['x'] == 0) {
                                 echo 'Не выполнено';
                                 $b = 'Выполнить';
                                 $z = 1;
-
-                            $setTaskValue = 'UPDATE task SET is_done= :is_done WHERE user_id= :user_id AND id= :task_id LIMIT 1';
-                            $stmt = $pdo->prepare($setTaskValue);
-                            $stmt->execute(["is_done" => $z, "user_id" => $_SESSION['user_id'], "task_id" => $_POST['id']]);
+                                updateTask($z, $_SESSION['user_id'], $_POST['task']);
+                            } else {
+                                echo 'Выполнено';
+                                $b = 'Сбросить';
+                                $z = 0;
+                                updateTask($z, $_SESSION['user_id'], $_POST['task']);
+                                }
                             ?>
+
                             <form method="POST">
-                                <input type="hidden" name="x" value="0">
-                                <input type="hidden" name="id" value="<?php echo $table['id']?>">
+                                <input type="hidden" name="x" value="<?php echo $z ?>">
+                                <input type="hidden" name="task" value="<?php echo $table['id']?>">
                                 <input type="submit" value="<?php echo $b;?>">
                             </form></td>
 
-
-                            <?php }
-                            if ($_POST['x'] == 1 || $table['id'] == 1) {
-                            echo 'Выполнено';
-                            $b = 'Сбросить';
-                            $z = 0;
-                        $setTaskValue = 'UPDATE task SET is_done= :is_done WHERE user_id= :user_id AND id= :task_id LIMIT 1';
-                        $stmt = $pdo->prepare($setTaskValue);
-                        $stmt->execute(["is_done" => $z, "user_id" => $_SESSION['user_id'], "task_id" => $_POST['id']]); ?>
-                        <form method="POST">
-                            <input type="hidden" name="x" value="1">
-                            <input type="hidden" name="id" value="<?php echo $table['id']?>">
-                            <input type="submit" value="<?php echo $b; } ?>">
-                        </form></td>
-
-
+                        <?php }  ?>
                     </tr>
-                    <?php }  ?>
+
                     </tbody>
                 </table>
             </div>
