@@ -1,6 +1,6 @@
 <?php
 require_once 'functions.php';
-var_dump($_POST);
+
 if (!isAuthorized()) {
     header('Location: login.php');
     die;
@@ -24,7 +24,11 @@ $thetime = date('d.m.Y', $time);
 if (isset($_POST['id']))  {
     deleteTask($_SESSION['user_id'], $_POST['id']);
 }
-
+echo $_SESSION['user_id'];
+var_dump($_POST);
+if (isset($_POST['task_id']))  {
+    updateAssignedUser($_POST['assigned_user_id'], $_POST['task_id'], $_SESSION['user_id']);
+}
 
 ?>
 
@@ -96,11 +100,10 @@ if (isset($_POST['id']))  {
                         <td>
                             <form action="todo.php" method="POST">
                                 <input name="task_id" type="hidden" value="<?php echo $table['id']?>">
-
                                 <select name="assigned_user_id">
                                     <?php foreach (getUsers() as $user): ?>
-                                        <option <?php if ($table['assigned_user_id'] == $table['user_id']):?>
-                                            selected<?php endif; ?> value="<?= $user['id'] ?>">
+                                        <option <?php if ($table['assigned_user_id'] == $user['id']):?>
+                                            selected <?php endif; ?> value="<?= $user['id'] ?>">
                                             <?= $user['login'] ?>
                                         </option>
                                     <?php endforeach; ?>
