@@ -6,8 +6,6 @@ if (!isAuthorized()) {
     die;
 }
 
-echo 'Hello' . '<br>';
-
 if (isset($_POST['newlogin']) && isset($_POST['newpassword'])) {
     checkExistedLogin($_POST['newlogin']);
 }
@@ -17,12 +15,8 @@ if (isset($_POST['description'])){
     echo 'Добавлено новое задание' . '<br>';
 }
 
-echo 'id Пользователя - ' . $_SESSION['user_id'];
-
-echo '<br>';
 $time=time();
 $thetime = date('d.m.Y', $time);
-echo $thetime;
 
 if (isset($_POST['id']))  {
     deleteTask($_SESSION['user_id'], $_POST['id']);
@@ -79,35 +73,22 @@ if (isset($_POST['id']))  {
                     </tr>
                     </thead>
                     <tbody>
-                    <?php  $getTable = 'SELECT id, description, date_added, is_done FROM task WHERE user_id= ? ORDER BY date_added DESC';
-                            $stmt = $pdo->prepare($getTable);
-                            $stmt->execute([$_SESSION['user_id']]);
-                            $tables = $stmt->fetchAll();
-                            foreach ($tables as $table) { ?>
+                    <?php
+                    foreach (getTasks($_SESSION['user_id']) as $table) {
+                    ?>
                     <tr>
                         <td><?php echo $table['id']?></td>
                         <td><?php echo $table['description']?></td>
                         <td><?php echo $table['date_added']?></td>
-                        <td><?php if ($_POST['x'] == 0) {
-                                echo 'Не выполнено';
-                                $b = 'Выполнить';
-                                $z = 1;
-                                updateTask($z, $_SESSION['user_id'], $_POST['task']);
-                            } else {
-                                echo 'Выполнено';
-                                $b = 'Сбросить';
-                                $z = 0;
-                                updateTask($z, $_SESSION['user_id'], $_POST['task']);
-                                }
-                            ?>
+                        <td><?php $o = updateTask($table['is_done'], $_SESSION['user_id'], $_POST[$y]);?>
 
                             <form method="POST">
-                                <input type="hidden" name="x" value="<?php echo $z ?>">
-                                <input type="hidden" name="task" value="<?php echo $table['id']?>">
-                                <input type="submit" value="<?php echo $b;?>">
+                                <input type="hidden" name="<?php echo 1 ?>" value="<?php echo $z ?>">
+                                <input type="hidden" name="<?php echo $y++; ?>" value="<?php echo $table['id']?>">
+                                <input type="submit" value="<?php if ($o == 'Выполнено') {echo 'Выполнить';} else {echo 'Сбросить';} ?>">
                             </form></td>
 
-                        <?php }  ?>
+                        <?php } ?>
                     </tr>
 
                     </tbody>
