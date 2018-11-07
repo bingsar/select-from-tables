@@ -1,9 +1,13 @@
 <?php
 require_once 'functions.php';
-
+var_dump($_POST);
 if (!isAuthorized()) {
     header('Location: login.php');
     die;
+}
+
+if (isset($_GET)) {
+    getUpdateTask ($_GET['changeDone'], $_SESSION['user_id'], $_GET['id']);
 }
 
 if (isset($_POST['newlogin']) && isset($_POST['newpassword'])) {
@@ -12,7 +16,6 @@ if (isset($_POST['newlogin']) && isset($_POST['newpassword'])) {
 
 if (isset($_POST['description'])){
     addTask($_POST['description']);
-    echo 'Добавлено новое задание' . '<br>';
 }
 
 $time=time();
@@ -21,6 +24,7 @@ $thetime = date('d.m.Y', $time);
 if (isset($_POST['id']))  {
     deleteTask($_SESSION['user_id'], $_POST['id']);
 }
+
 
 ?>
 
@@ -49,7 +53,7 @@ if (isset($_POST['id']))  {
                     </form>
                     <hr>
                     <br>
-                    <h1>Удалить дело</h1>
+                    <h1>Удалить задание</h1>
                     <form action="todo.php" method="POST">
                         <div class="form-group">
                             <label for="lg" class="sr-only">Описание</label>
@@ -66,10 +70,13 @@ if (isset($_POST['id']))  {
                     <h1>Список дел</h1>
                     <thead>
                     <tr>
+
                         <th>id</th>
                         <th>Дело</th>
                         <th>Когда</th>
                         <th>Выполненные | Невыполненные</th>
+                        <th>Исполнитель</th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -80,26 +87,34 @@ if (isset($_POST['id']))  {
                         <td><?php echo $table['id']?></td>
                         <td><?php echo $table['description']?></td>
                         <td><?php echo $table['date_added']?></td>
-                        <td><?php $o = updateTask($table['is_done'], $_SESSION['user_id'], $_POST[$y]);?>
+                        <td><?php if ($table['is_done'] == 0) {
+                            echo 'Не выполнено | '; ?><a href="todo.php?changeDone=1&id=<?php echo $table['id'];?>">Выполнить</a>
+                            <?php } else {
+                            echo 'Выполнено | ';?><a href="todo.php?changeDone=0&id=<?php echo $table['id'];?>">Сбросить</a>
+                            <?php } ?>
 
-                            <form method="POST">
-                                <input type="hidden" name="<?php echo 1 ?>" value="<?php echo $z ?>">
-                                <input type="hidden" name="<?php echo $y++; ?>" value="<?php echo $table['id']?>">
-                                <input type="submit" value="<?php if ($o == 'Выполнено') {echo 'Выполнить';} else {echo 'Сбросить';} ?>">
-                            </form></td>
+                        <td>
+                            <form action="todo.php" method="POST">
+                                <input name="task_id" type="hidden" value="<?php echo $table['id']?>">
 
-                        <?php } ?>
+                                <select name="assigned_user_id">
+                                    <?php foreach (getUsers() as $user): ?>
+                                        <option <?php if ($table['assigned_user_id'] == $table['user_id']):?>
+                                            selected<?php endif; ?> value="<?= $user['id'] ?>">
+                                            <?= $user['login'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <button type="submit">Делегировать</button>
+                                <?php } ?>
+                            </form>
+                        </td>
                     </tr>
-
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </section>
-
-
-
-
 </body>
 </html>

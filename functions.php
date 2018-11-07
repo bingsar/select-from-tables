@@ -87,14 +87,13 @@ function deleteTask($userId, $id) {
 
 function getTasks ($user_id) {
     global $pdo;
-    $getTable = 'SELECT id, description, date_added, is_done FROM task WHERE user_id= ? ORDER BY date_added DESC';
+    $getTable = 'SELECT id, description, assigned_user_id, date_added, is_done FROM task WHERE user_id= ? ORDER BY date_added ASC';
     $stmt = $pdo->prepare($getTable);
     $stmt->execute([$user_id]);
     $tables = $stmt->fetchAll();
     return $tables;
 
 }
-
 
 function getUpdateTask ($is_done, $user_id, $task_id) {
     global $pdo;
@@ -103,21 +102,12 @@ function getUpdateTask ($is_done, $user_id, $task_id) {
     $stmt->execute(["is_done" => $is_done, "user_id" => $user_id, "task_id" => $task_id]);
 }
 
-function updateTask ($is_done, $user_id, $task_id) {
+function getUsers() {
+    global $pdo;
+    $getUsers = 'SELECT login,id FROM user';
+    $stmt = $pdo->prepare($getUsers);
+    $stmt->execute();
+    $users = $stmt->fetchAll();
+    return $users;
 
-if ($is_done == 0) {
-    echo 'Не выполнено';
-
-    $z = 1;
-
-    getUpdateTask($z, $user_id, $task_id);
-
-} else {
-    echo 'Выполнено';
-
-    $z = 0;
-
-    getUpdateTask($z, $user_id, $task_id);
-
-}
 }
