@@ -24,8 +24,7 @@ $thetime = date('d.m.Y', $time);
 if (isset($_POST['id']))  {
     deleteTask($_SESSION['user_id'], $_POST['id']);
 }
-echo $_SESSION['user_id'];
-var_dump($_POST);
+
 if (isset($_POST['task_id']))  {
     updateAssignedUser($_POST['assigned_user_id'], $_POST['task_id'], $_SESSION['user_id']);
 }
@@ -96,23 +95,23 @@ if (isset($_POST['task_id']))  {
                             <?php } else {
                             echo 'Выполнено | ';?><a href="todo.php?changeDone=0&id=<?php echo $table['id'];?>">Сбросить</a>
                             <?php } ?>
-
+                        </td>
                         <td>
                             <form action="todo.php" method="POST">
                                 <input name="task_id" type="hidden" value="<?php echo $table['id']?>">
                                 <select name="assigned_user_id">
-                                    <?php foreach (getUsers() as $user): ?>
+                                    <?php foreach (getUsers() as $user){ ?>
                                         <option <?php if ($table['assigned_user_id'] == $user['id']):?>
                                             selected <?php endif; ?> value="<?= $user['id'] ?>">
                                             <?= $user['login'] ?>
+                                            <?php } ?>
                                         </option>
-                                    <?php endforeach; ?>
                                 </select>
                                 <button type="submit">Делегировать</button>
-                                <?php } ?>
                             </form>
                         </td>
                     </tr>
+                    <?php } ?>
                     </tbody>
                 </table>
             </div>

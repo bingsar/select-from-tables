@@ -114,7 +114,7 @@ function getUsers() {
 
 function updateAssignedUser($assigned_id, $task_id, $user_id) {
     global $pdo;
-    $updateAssignedUser = 'UPDATE task SET assigned_user_id= :assigned_id WHERE id= :task_id  user_id= :user_id';
+    $updateAssignedUser = 'UPDATE task SET assigned_user_id= :assigned_id WHERE id= :task_id AND  user_id= :user_id';
     $stmt = $pdo->prepare($updateAssignedUser);
     $stmt->execute(["assigned_id" => $assigned_id, "task_id" => $task_id, "user_id" => $user_id]);
 }
