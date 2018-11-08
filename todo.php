@@ -75,7 +75,7 @@ if (isset($_POST['task_id']))  {
                     <tr>
 
                         <th>id</th>
-                        <th>Дело</th>
+                        <th>Задание</th>
                         <th>Когда</th>
                         <th>Выполненные | Невыполненные</th>
                         <th>Исполнитель</th>
@@ -114,6 +114,32 @@ if (isset($_POST['task_id']))  {
                     <?php } ?>
                     </tbody>
                 </table>
+                    <h1>Делегированные дела для пользователя - <?php echo $_SESSION['user_login']; ?></h1>
+                    <table class="table table-bordered table-inverse">
+                        <thead>
+                        <tr>
+
+                            <th>id Создателя</th>
+                            <th>Описание задания</th>
+                            <th>id Исполнителя</th>
+                            <th>Имя исполнителя</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach (getDeligatedTasks($_SESSION['user_id']) as $deligated) {
+                            ?>
+                            <tr>
+                                <td><?php echo $deligated['user_id']?></td>
+                                <td><?php echo $deligated['description']?></td>
+                                <td><?php echo $deligated['assigned_user_id']?></td>
+                                <td><?php echo $deligated['login']?></td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                    <h1>Количество дел: <?php countTask($_SESSION['user_id']); ?></h1>
             </div>
         </div>
     </div>

@@ -13,10 +13,14 @@ $thetime = date('Y-m-d H:i:s' , time());
 function authorization($login, $password)
 {
    global $pdo;
-    $authorization = 'SELECT * FROM user WHERE login = "' . $login . '"' . 'AND password = "' . $password . '"';
-    foreach ($pdo->query($authorization) as $user) {
+    $authorization = 'SELECT * FROM user WHERE login = :login AND password = :password';
+    $stmt = $pdo->prepare($authorization);
+    $stmt->execute(["login" => "$login", "password" => "$password"]);
+    $users = $stmt->fetchAll();
+    foreach ($users as $user) {
         if (isset($user)) {
             $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_login'] = $user['login'];
             return true;
         } else {
             return false;
@@ -28,9 +32,12 @@ function authorization($login, $password)
 function checkExistedLogin($login)
 {
     global $pdo;
-    $checkExistedLogin = 'SELECT id FROM user WHERE login= "' . $login . '"';
-    foreach ($pdo->query($checkExistedLogin) as $logins) {
-        if (isset($logins)) {
+    $checkExistedLogin = 'SELECT id FROM user WHERE login= ?';
+    $stmt = $pdo->prepare($checkExistedLogin);
+    $stmt->execute(["$login"]);
+    $logins = $stmt->fetchAll();
+    foreach ($logins as $login) {
+        if (isset($login)) {
             return false;
         }
     }
@@ -78,11 +85,11 @@ function logout()
     session_destroy();
 }
 
-function deleteTask($userId, $id) {
+function deleteTask($user_id, $id) {
     global $pdo;
     $deleteTask = 'DELETE FROM task WHERE user_id= :user_id AND id= :id LIMIT 1';
     $stmt = $pdo->prepare($deleteTask);
-    $stmt->execute(["user_id" => $userId, "id" => $id]);
+    $stmt->execute(["user_id" => $user_id, "id" => $id]);
 }
 
 function getTasks ($user_id) {
@@ -117,4 +124,24 @@ function updateAssignedUser($assigned_id, $task_id, $user_id) {
     $updateAssignedUser = 'UPDATE task SET assigned_user_id= :assigned_id WHERE id= :task_id AND  user_id= :user_id';
     $stmt = $pdo->prepare($updateAssignedUser);
     $stmt->execute(["assigned_id" => $assigned_id, "task_id" => $task_id, "user_id" => $user_id]);
+}
+
+function getDeligatedTasks ($user_id) {
+    global $pdo;
+    $getDeligatedTasks = 'SELECT user_id, description, assigned_user_id, login FROM task t INNER JOIN user u ON u.id=t.assigned_user_id WHERE t.assigned_user_id = :user_id AND :user_id not in (SELECT t.user_id FROM task)';
+    $stmt = $pdo->prepare($getDeligatedTasks);
+    $stmt->execute(["user_id" => $user_id]);
+    $deligates = $stmt->fetchAll();
+    return $deligates;
+}
+
+function countTask ($user_id) {
+    global $pdo;
+    $nRows = $pdo->query('SELECT count(*) FROM task WHERE user_id = "' . "$user_id" . '"OR assigned_user_id ="' . "$user_id" . '"')->fetchColumn();
+    //$countTask = 'SELECT count(*) FROM task WHERE user_id = :$user_id OR assigned_user_id = :$user_id';
+    //$stmt = $pdo->prepare($countTask);
+    //$stmt->execute(["user_id" => $user_id]);
+    //$count = $stmt->fetchColumn();
+    //return $count;
+    echo $nRows;
 }

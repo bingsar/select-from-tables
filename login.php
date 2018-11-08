@@ -1,6 +1,5 @@
 <?php
 require_once 'functions.php';
-
 $errors = [];
 if (!empty($_POST['login']) && !empty($_POST['password'])) {
     if (authorization($_POST['login'], $_POST['password'])) {
@@ -10,7 +9,6 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
         $errors[] = 'Неверный логин или пароль';
     }
 }
-
 if (!empty($_POST['newlogin'])) {
     if (checkExistedLogin($_POST['newlogin'])){
         header('Location: todo.php');
