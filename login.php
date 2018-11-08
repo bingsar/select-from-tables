@@ -30,7 +30,11 @@ if (!empty($_POST['newlogin'])) {
 <section id="login">
     <div class="container">
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-md-8">
+                <h1>Добро пожаловать в список дел</h1>
+                <p><label for="lg" style="text-decoration: underline; font-size: large">Войдите</label> или <label for="rg" style="text-decoration: underline; font-size: large">Зарегистрируйтесь</label></p>
+            </div>
+            <div class="col-md-4">
                 <div class="form-wrap">
                     <h1>Авторизация</h1>
                     <ul>
@@ -58,7 +62,7 @@ if (!empty($_POST['newlogin'])) {
                     <form method="POST">
                         <div class="form-group">
                             <label for="lg" class="sr-only">Логин</label>
-                            <input type="text" placeholder="Логин" name="newlogin" id="lg" class="form-control" required>
+                            <input type="text" placeholder="Логин" name="newlogin" id="rg" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="lg" class="sr-only">Пароль</label>
@@ -71,6 +75,7 @@ if (!empty($_POST['newlogin'])) {
                     <hr>
                 </div>
             </div>
+
         </div>
     </div>
 </section>

@@ -55,7 +55,6 @@ if (isset($_POST['task_id']))  {
                         <input type="submit" id="btn-login" class="btn btn-success btn-lg btn-block" value="Добавить">
                     </form>
                     <hr>
-                    <br>
                     <h1>Удалить задание</h1>
                     <form action="todo.php" method="POST">
                         <div class="form-group">
@@ -65,12 +64,12 @@ if (isset($_POST['task_id']))  {
                         <input type="submit" id="btn-login" class="btn btn-success btn-lg btn-block" value="Удалить дело">
                     </form>
                     <br>
-                    <a class="btn btn-success" href="logout.php">Выход</a>
+                    <a class="btn btn-danger btn-lg" href="logout.php">Выход</a>
                 </div>
             </div>
                 <div class="col-md-8">
                 <table class="table table-bordered table-inverse">
-                    <h1>Список дел</h1>
+                    <h3>Список заданий</h3>
                     <thead>
                     <tr>
 
@@ -114,7 +113,7 @@ if (isset($_POST['task_id']))  {
                     <?php } ?>
                     </tbody>
                 </table>
-                    <h1>Делегированные дела для пользователя - <?php echo $_SESSION['user_login']; ?></h1>
+                    <h3>Делегированные дела для пользователя - <?php echo $_SESSION['user_login']; ?></h3>
                     <table class="table table-bordered table-inverse">
                         <thead>
                         <tr>
@@ -139,7 +138,7 @@ if (isset($_POST['task_id']))  {
                         <?php } ?>
                         </tbody>
                     </table>
-                    <h1>Количество дел: <?php countTask($_SESSION['user_id']); ?></h1>
+                    <h3>Количество дел: <?php countTask($_SESSION['user_id']); ?></h3>
             </div>
         </div>
     </div>

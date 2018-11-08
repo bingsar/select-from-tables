@@ -60,6 +60,7 @@ function addUser()
     $stmt->execute(["$userLogin"]);
     $newUserSession = $stmt->fetch();
     $_SESSION['user_id'] = $newUserSession['id'];
+    $_SESSION['user_login'] = $_POST['newlogin'];
 
 }
 
@@ -138,10 +139,5 @@ function getDeligatedTasks ($user_id) {
 function countTask ($user_id) {
     global $pdo;
     $nRows = $pdo->query('SELECT count(*) FROM task WHERE user_id = "' . "$user_id" . '"OR assigned_user_id ="' . "$user_id" . '"')->fetchColumn();
-    //$countTask = 'SELECT count(*) FROM task WHERE user_id = :$user_id OR assigned_user_id = :$user_id';
-    //$stmt = $pdo->prepare($countTask);
-    //$stmt->execute(["user_id" => $user_id]);
-    //$count = $stmt->fetchColumn();
-    //return $count;
     echo $nRows;
 }
